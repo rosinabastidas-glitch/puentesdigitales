@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Guía de taller — MakeCode + micro:bit</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+
+:root{
+  --bg: #EBEBEB;
+  --card: #FFFFFF;
+  --ink: #414042;
+  --celeste: #5BCBF5;
+  --magenta: #EE4D9B;
+  --violeta: #87499C;
+  --celeste-soft: #E3F5FD;
+  --magenta-soft: #FDE9F3;
+  --violeta-soft: #F1E8F5;
+  --muted: #7A797C;
+  --line: #D8D8D8;
+}
+
+*{ box-sizing: border-box; }
+html,body{ margin:0; padding:0; }
+body{
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Nunito', sans-serif;
+  line-height: 1.5;
+}
+
+/* ---------- HERO ---------- */
+.hero{
+  display:grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 40px;
+  padding: 72px 6vw 56px;
+  border-bottom: 3px solid var(--violeta);
+  align-items:center;
+  background:
+    linear-gradient(180deg, #FFFFFF 0%, var(--bg) 100%);
+}
+.eyebrow{
+  font-family:'Nunito', sans-serif;
+  font-size: 12.5px;
+  letter-spacing: 0.08em;
+  color: var(--violeta);
+  text-transform: uppercase;
+  margin-bottom: 18px;
+  font-weight:700;
+}
+.eyebrow::before{ content:"● "; color: var(--magenta); }
+h1{
+  font-family:'Nunito', sans-serif;
+  font-weight:800;
+  font-size: clamp(28px, 4vw, 46px);
+  line-height: 1.15;
+  margin: 0 0 20px;
+  color: var(--ink);
+}
+h1 span{ color: var(--magenta); }
+.hero p.lead{
+  font-size: 17px;
+  color: var(--muted);
+  max-width: 46ch;
+  margin: 0 0 28px;
+}
+.pill-row{ display:flex; gap:10px; flex-wrap:wrap; }
+.pill{
+  font-family:'Nunito', sans-serif;
+  font-size: 11.5px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  letter-spacing: 0.02em;
+  font-weight:700;
+}
+.pill.c{ background: var(--celeste-soft); color: #1D7FA8; border: 1.5px solid var(--celeste); }
+.pill.m{ background: var(--magenta-soft); color: var(--magenta); border: 1.5px solid var(--magenta); }
+.pill.v{ background: var(--violeta-soft); color: var(--violeta); border: 1.5px solid var(--violeta); }
+
+/* LED grid */
+.led-wrap{ display:flex; justify-content:center; align-items:center; }
+.led-board{
+  background: var(--card);
+  border: 1.5px solid var(--line);
+  border-radius: 14px;
+  padding: 26px;
+  box-shadow: 0 8px 28px rgba(135,73,156,0.14);
+}
+.led-grid{
+  display:grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 9px;
+}
+.led-dot{
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  transition: background 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.led-dot.on{
+  background: var(--magenta);
+  border-color: var(--magenta);
+  box-shadow: 0 0 10px 2px rgba(238,77,155,0.45);
+}
+.led-caption{
+  text-align:center; margin-top:14px;
+  font-family:'Nunito', sans-serif;
+  font-size: 11px; color: var(--muted);
+  letter-spacing: 0.06em;
+}
+
+/* ---------- INTRO ---------- */
+.intro{
+  padding: 48px 6vw 8px;
+  max-width: 880px;
+}
+.intro h2, .checklist-section h2{
+  font-family:'Nunito', sans-serif;
+  color: var(--violeta);
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+  font-weight:700;
+}
+.intro p{ color: var(--ink); font-size: 16px; max-width: 70ch; }
+
+/* ---------- GAMES ---------- */
+.games{
+  padding: 40px 6vw 20px;
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 22px;
+}
+.card{
+  background: var(--card);
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  padding: 22px 22px 20px;
+  position:relative;
+  display:flex; flex-direction:column;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.card:hover{
+  box-shadow: 0 10px 26px rgba(65,64,66,0.12);
+  transform: translateY(-2px);
+}
+.card::before{
+  content:"";
+  position:absolute; top:0; left:0; right:0; height:5px;
+  border-radius: 12px 12px 0 0;
+}
+.card.facil::before{ background: var(--celeste); }
+.card.media::before{ background: var(--violeta); }
+.card.avanzada::before{ background: var(--magenta); }
+
+.card-head{ display:flex; align-items:center; gap:10px; margin-bottom: 6px; }
+.dot{ width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+.card.facil .dot{ background: var(--celeste); }
+.card.media .dot{ background: var(--violeta); }
+.card.avanzada .dot{ background: var(--magenta); }
+.card h3{
+  font-family:'Nunito', sans-serif;
+  font-size: 17px; margin:0; color: var(--ink);
+}
+.card .difficulty-label{
+  font-family:'Nunito', sans-serif;
+  font-size:10.5px; color: var(--muted); letter-spacing:0.02em;
+  text-transform:uppercase; margin-left:auto; font-weight:700;
+}
+.pinout{
+  display:flex; gap:16px; flex-wrap:wrap;
+  margin: 12px 0 14px;
+  padding: 10px 0;
+  border-top: 1.5px dashed var(--line);
+  border-bottom: 1.5px dashed var(--line);
+}
+.pin{ font-family:'Nunito', sans-serif; font-size: 11.5px; color: var(--muted); }
+.pin b{ color: var(--ink); font-weight:600; display:block; font-family:'Nunito', sans-serif; font-size:13px; }
+.card p.desc{ font-size: 14.5px; color: var(--ink); margin: 0 0 14px; flex-grow:1; }
+.tags{ display:flex; gap:6px; flex-wrap:wrap; margin-bottom: 16px; }
+.tag{
+  font-family:'Nunito', sans-serif;
+  font-size: 10.5px;
+  padding: 4px 9px;
+  border-radius: 4px;
+  font-weight:700;
+}
+.card.facil .tag{ background: var(--celeste-soft); color: #1D7FA8; }
+.card.media .tag{ background: var(--violeta-soft); color: var(--violeta); }
+.card.avanzada .tag{ background: var(--magenta-soft); color: var(--magenta); }
+
+.card a.cta{
+  font-family:'Nunito', sans-serif;
+  font-size: 12.5px;
+  color: #FFFFFF;
+  text-decoration:none;
+  padding: 10px 14px;
+  border-radius: 6px;
+  text-align:center;
+  font-weight:700;
+  letter-spacing:0.02em;
+  transition: opacity 0.15s ease;
+}
+.card.facil a.cta{ background: #1D8FBF; }
+.card.media a.cta{ background: var(--violeta); }
+.card.avanzada a.cta{ background: var(--magenta); }
+.card a.cta:hover{ opacity:0.85; }
+
+/* ---------- CHECKLIST ---------- */
+.checklist-section{
+  padding: 20px 6vw 64px;
+  max-width: 880px;
+}
+.checklist{ list-style:none; padding:0; margin:0; }
+.checklist li{
+  display:flex; gap:12px;
+  padding: 10px 0;
+  border-bottom: 1.5px solid var(--line);
+  font-size: 15px;
+  align-items:flex-start;
+}
+.checklist li::before{
+  content:"";
+  width:11px; height:11px;
+  margin-top:4px;
+  border: 2px solid var(--magenta);
+  border-radius: 3px;
+  flex-shrink:0;
+}
+.checklist b{ color: var(--violeta); }
+
+footer{
+  padding: 30px 6vw 48px;
+  border-top: 3px solid var(--celeste);
+  font-family:'Nunito', sans-serif;
+  font-size: 11.5px;
+  color: var(--muted);
+  letter-spacing: 0.02em;
+  background: #FFFFFF;
+}
+
+@media (max-width: 760px){
+  .hero{ grid-template-columns: 1fr; padding: 48px 6vw; }
+  .led-wrap{ order:-1; }
+}
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <div>
+    <div class="eyebrow">MakeCode · micro:bit</div>
+    <h1>25 luces.<br><span>Un montón de juegos.</span></h1>
+    <p class="lead">Cinco juegos para programar con tu micro:bit. Elegí uno, armalo en MakeCode y desafiá a alguien a jugarlo.</p>
+    <div class="pill-row">
+      <span class="pill c">PROGRAMÁ</span>
+      <span class="pill m">PROBÁ</span>
+      <span class="pill v">JUGÁ</span>
+    </div>
+  </div>
+  <div class="led-wrap">
+    <div class="led-board">
+      <div class="led-grid" id="ledGrid"></div>
+      <div class="led-caption">show icon · demo en vivo</div>
+    </div>
+  </div>
+</section>
+
+<section class="intro">
+  <h2>¿Por dónde empiezo?</h2>
+  <p>Cada tarjeta te muestra qué tan difícil es el juego, cuántos jugadores necesita y qué bloques de MakeCode vas a usar. El color te da la pista: <b style="color:#1D8FBF">celeste es fácil</b>, <b style="color:#87499C">violeta es medio</b> y <b style="color:#EE4D9B">magenta es para valientes</b>. Si es tu primera vez, arrancá por uno celeste. ¿Terminaste? Pasá al siguiente.</p>
+</section>
+
+<section class="games">
+
+  <div class="card media">
+    <div class="card-head">
+      <span class="dot"></span>
+      <h3>Duelo de reflejos</h3>
+      <span class="difficulty-label">Media</span>
+    </div>
+    <div class="pinout">
+      <div class="pin"><b>2 placas</b>vos y tu rival</div>
+      <div class="pin"><b>~35 min</b>para armarlo</div>
+      <div class="pin"><b>Radio</b>bloque central</div>
+    </div>
+    <p class="desc">Una placa hace de árbitro: espera un tiempo al azar y da la señal de salida por radio. Gana quien presiona A o B primero. ¿Presionaste antes de tiempo? Descalificado. Buscá un rival y a jugar.</p>
+    <div class="tags">
+      <span class="tag">radio enviar/recibir</span>
+      <span class="tag">botones</span>
+      <span class="tag">aleatorio</span>
+    </div>
+    <a class="cta" href="https://makecode.microbit.org/" target="_blank" rel="noopener">Abrir MakeCode →</a>
+  </div>
+
+  <div class="card facil">
+    <div class="card-head">
+      <span class="dot"></span>
+      <h3>Simón dice</h3>
+      <span class="difficulty-label">Fácil</span>
+    </div>
+    <div class="pinout">
+      <div class="pin"><b>1 jugador</b>solo vos</div>
+      <div class="pin"><b>~25 min</b>para armarlo</div>
+      <div class="pin"><b>Acelerómetro</b>bloque central</div>
+    </div>
+    <p class="desc">La placa te muestra una secuencia de gestos (sacudir, inclinar a la izquierda o a la derecha) y tenés que repetirla sin equivocarte. Cada ronda se hace más larga. ¿Hasta qué nivel llegás?</p>
+    <div class="tags">
+      <span class="tag">sacudir / inclinar</span>
+      <span class="tag">arreglos</span>
+      <span class="tag">variables</span>
+    </div>
+    <a class="cta" href="https://makecode.microbit.org/" target="_blank" rel="noopener">Abrir MakeCode →</a>
+  </div>
+
+  <div class="card media">
+    <div class="card-head">
+      <span class="dot"></span>
+      <h3>Esquiva obstáculos</h3>
+      <span class="difficulty-label">Media</span>
+    </div>
+    <div class="pinout">
+      <div class="pin"><b>1 jugador</b>solo vos</div>
+      <div class="pin"><b>~30 min</b>para armarlo</div>
+      <div class="pin"><b>Matriz LED</b>bloque central</div>
+    </div>
+    <p class="desc">Incliná la placa para esquivar los puntos que caen por la pantalla de LEDs. Cuanto más aguantás, más rápido caen. Un clásico de los videojuegos, hecho por vos en 25 luces.</p>
+    <div class="tags">
+      <span class="tag">bucle siempre</span>
+      <span class="tag">acelerómetro</span>
+      <span class="tag">matriz de LEDs</span>
+    </div>
+    <a class="cta" href="https://makecode.microbit.org/" target="_blank" rel="noopener">Abrir MakeCode →</a>
+  </div>
+
+  <div class="card facil">
+    <div class="card-head">
+      <span class="dot"></span>
+      <h3>Mascota del clima</h3>
+      <span class="difficulty-label">Fácil</span>
+    </div>
+    <div class="pinout">
+      <div class="pin"><b>1 jugador</b>solo vos</div>
+      <div class="pin"><b>~20 min</b>para armarlo</div>
+      <div class="pin"><b>Sensores</b>bloque central</div>
+    </div>
+    <p class="desc">Programá una mascota que vive en la pantalla de LEDs y siente la temperatura y la luz de verdad. Si tiene calor o está a oscuras, se pone triste: cuidala llevándola a la sombra o dándole luz.</p>
+    <div class="tags">
+      <span class="tag">temperatura</span>
+      <span class="tag">nivel de luz</span>
+      <span class="tag">condicionales</span>
+    </div>
+    <a class="cta" href="https://makecode.microbit.org/" target="_blank" rel="noopener">Abrir MakeCode →</a>
+  </div>
+
+  <div class="card avanzada">
+    <div class="card-head">
+      <span class="dot"></span>
+      <h3>Posta por radio</h3>
+      <span class="difficulty-label">Avanzada</span>
+    </div>
+    <div class="pinout">
+      <div class="pin"><b>4+ placas</b>en equipo</div>
+      <div class="pin"><b>~40 min</b>para armarlo</div>
+      <div class="pin"><b>Radio</b>bloque central</div>
+    </div>
+    <p class="desc">Armen una fila de placas que se pasan una señal invisible por radio, sacudiendo cada una en orden como si fuera una carrera de postas. ¿Qué equipo la completa más rápido? Necesitan 4 placas o más.</p>
+    <div class="tags">
+      <span class="tag">grupos de radio</span>
+      <span class="tag">sacudir</span>
+      <span class="tag">cronómetro</span>
+    </div>
+    <a class="cta" href="https://makecode.microbit.org/" target="_blank" rel="noopener">Abrir MakeCode →</a>
+  </div>
+
+</section>
+
+<section class="checklist-section">
+  <h2>Antes de arrancar</h2>
+  <ul class="checklist">
+    <li><span><b>Conectá tu micro:bit.</b> Con el cable USB a la compu, o con la pila si vas a jugar en movimiento.</span></li>
+    <li><span><b>Probá primero en el simulador.</b> MakeCode tiene un micro:bit virtual a la izquierda de la pantalla: usalo para testear tu código antes de descargarlo a la placa.</span></li>
+    <li><span><b>¿Juego con radio?</b> Vos y tu rival tienen que poner el mismo número de grupo de radio en el código, si no las placas no se van a escuchar entre sí.</span></li>
+    <li><span><b>Si algo no funciona, no pasa nada.</b> Cambiá un bloque, volvé a descargar y probá de nuevo. Romper el código y arreglarlo es exactamente así como se aprende a programar.</span></li>
+    <li><span><b>¿Lo terminaste? Hacelo tuyo.</b> Cambiale los íconos, sumale sonidos, agregale un contador de puntos. La mejor versión del juego es la que todavía no existe.</span></li>
+  </ul>
+</section>
+
+<footer>
+  PROGRAMÁ · PROBÁ · JUGÁ · REPETÍ
+</footer>
+
+<script>
+// Mini animación tipo "show icon" del micro:bit en la grilla de la derecha
+const grid = document.getElementById('ledGrid');
+const frames = [
+  // corazón
+  [0,1,0,1,0, 1,1,1,1,1, 1,1,1,1,1, 0,1,1,1,0, 0,0,1,0,0],
+  // check
+  [0,0,0,0,1, 0,0,0,1,0, 1,0,1,0,0, 1,1,0,0,0, 0,1,0,0,0],
+  // flecha arriba
+  [0,0,1,0,0, 0,1,1,1,0, 1,0,1,0,1, 0,0,1,0,0, 0,0,1,0,0],
+  // carita feliz
+  [0,1,0,1,0, 0,1,0,1,0, 0,0,0,0,0, 1,0,0,0,1, 0,1,1,1,0]
+];
+
+const dots = [];
+for(let i=0;i<25;i++){
+  const d = document.createElement('div');
+  d.className = 'led-dot';
+  grid.appendChild(d);
+  dots.push(d);
+}
+
+let f = 0;
+function render(){
+  const frame = frames[f % frames.length];
+  dots.forEach((d,i)=> d.classList.toggle('on', frame[i]===1));
+  f++;
+}
+render();
+setInterval(render, 1400);
+</script>
+
+</body>
+</html>
