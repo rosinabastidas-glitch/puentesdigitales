@@ -187,10 +187,16 @@ h1 span{ color: var(--magenta); }
   padding: 4px 9px;
   border-radius: 4px;
   font-weight:700;
+  color: #FFFFFF;
 }
-.card.facil .tag{ background: var(--celeste-soft); color: #1D7FA8; }
-.card.media .tag{ background: var(--violeta-soft); color: var(--violeta); }
-.card.avanzada .tag{ background: var(--magenta-soft); color: var(--magenta); }
+/* Colores aproximados a las categorías reales del editor MakeCode */
+.tag.radio{ background: #E3008C; }     /* Radio */
+.tag.input{ background: #00A6F0; }     /* Input: botones, acelerómetro, sacudir, sensores */
+.tag.loops{ background: #07889B; }     /* Loops: bucle siempre, cronómetro */
+.tag.led{ background: #E64C42; }       /* Led: matriz de LEDs */
+.tag.logic{ background: #E6A400; color: #3A2900; } /* Logic: condicionales */
+.tag.variables{ background: #EE8B22; } /* Variables / arreglos */
+.tag.math{ background: #2F8F5B; }      /* Math: aleatorio */
 
 .card a.cta{
   font-family:'Nunito', sans-serif;
@@ -208,6 +214,49 @@ h1 span{ color: var(--magenta); }
 .card.media a.cta{ background: var(--violeta); }
 .card.avanzada a.cta{ background: var(--magenta); }
 .card a.cta:hover{ opacity:0.85; }
+
+.hint{
+  margin: 0 0 14px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.hint summary{
+  cursor: pointer;
+  list-style: none;
+  font-family:'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  padding: 9px 12px;
+  display:flex;
+  align-items:center;
+  gap: 8px;
+  user-select:none;
+}
+.hint summary::-webkit-details-marker{ display:none; }
+.hint summary::before{
+  content: "💡";
+  font-size: 13px;
+}
+.hint summary::after{
+  content: "mostrar";
+  margin-left:auto;
+  font-size: 11px;
+  font-weight: 600;
+  opacity: 0.7;
+}
+.hint[open] summary::after{ content: "ocultar"; }
+.hint-body{
+  padding: 2px 14px 14px;
+  font-size: 13.5px;
+  line-height: 1.55;
+}
+.hint-body ol{ margin: 6px 0 0; padding-left: 18px; }
+.hint-body li{ margin-bottom: 4px; }
+
+.card.media .hint{ background: var(--violeta-soft); }
+.card.media .hint summary{ color: var(--violeta); }
+.card.avanzada .hint{ background: var(--magenta-soft); }
+.card.avanzada .hint summary{ color: var(--magenta); }
 
 /* ---------- CHECKLIST ---------- */
 .checklist-section{
@@ -289,10 +338,22 @@ footer{
     </div>
     <p class="desc">Una placa hace de árbitro: espera un tiempo al azar y da la señal de salida por radio. Gana quien presiona A o B primero. ¿Presionaste antes de tiempo? Descalificado. Buscá un rival y a jugar.</p>
     <div class="tags">
-      <span class="tag">radio enviar/recibir</span>
-      <span class="tag">botones</span>
-      <span class="tag">aleatorio</span>
+      <span class="tag radio">radio enviar/recibir</span>
+      <span class="tag input">botones</span>
+      <span class="tag math">aleatorio</span>
     </div>
+    <details class="hint">
+      <summary>Pista para armarlo</summary>
+      <div class="hint-body">
+        Pensalo en dos programas distintos, uno para cada placa:
+        <ol>
+          <li><b>Placa árbitro:</b> al presionar A, esperá un número aleatorio de segundos (2 a 6) y después enviá por radio el mensaje "YA".</li>
+          <li><b>Ambas placas:</b> al recibir el mensaje de radio "YA", muestren un ✓ y arranquen a escuchar los botones A y B.</li>
+          <li>La primera placa que detecte el botón presionado, envía por radio su nombre como ganador.</li>
+          <li>Antes de todo, no te olvides de poner el mismo <b>grupo de radio</b> en las dos placas.</li>
+        </ol>
+      </div>
+    </details>
     <a class="cta" href="https://makecode.microbit.org/" target="_blank" rel="noopener">Abrir MakeCode →</a>
   </div>
 
@@ -309,9 +370,9 @@ footer{
     </div>
     <p class="desc">La placa te muestra una secuencia de gestos (sacudir, inclinar a la izquierda o a la derecha) y tenés que repetirla sin equivocarte. Cada ronda se hace más larga. ¿Hasta qué nivel llegás?</p>
     <div class="tags">
-      <span class="tag">sacudir / inclinar</span>
-      <span class="tag">arreglos</span>
-      <span class="tag">variables</span>
+      <span class="tag input">sacudir / inclinar</span>
+      <span class="tag variables">arreglos</span>
+      <span class="tag variables">variables</span>
     </div>
     <a class="cta" href="https://makecode.microbit.org/" target="_blank" rel="noopener">Abrir MakeCode →</a>
   </div>
@@ -329,10 +390,21 @@ footer{
     </div>
     <p class="desc">Incliná la placa para esquivar los puntos que caen por la pantalla de LEDs. Cuanto más aguantás, más rápido caen. Un clásico de los videojuegos, hecho por vos en 25 luces.</p>
     <div class="tags">
-      <span class="tag">bucle siempre</span>
-      <span class="tag">acelerómetro</span>
-      <span class="tag">matriz de LEDs</span>
+      <span class="tag loops">bucle siempre</span>
+      <span class="tag input">acelerómetro</span>
+      <span class="tag led">matriz de LEDs</span>
     </div>
+    <details class="hint">
+      <summary>Pista para armarlo</summary>
+      <div class="hint-body">
+        <ol>
+          <li>Creá dos variables: una para la posición del jugador (columna 0 a 4) y otra para la posición del obstáculo.</li>
+          <li>En el bucle "siempre": leé la inclinación (bloque de acelerómetro) para mover al jugador a la izquierda o derecha.</li>
+          <li>Con una pausa corta (por ejemplo 400 ms), hacé bajar al obstáculo una fila en la matriz de LEDs.</li>
+          <li>Si el jugador y el obstáculo coinciden en la misma posición cuando llega abajo, mostrá una X y terminá el juego.</li>
+        </ol>
+      </div>
+    </details>
     <a class="cta" href="https://makecode.microbit.org/" target="_blank" rel="noopener">Abrir MakeCode →</a>
   </div>
 
@@ -349,9 +421,9 @@ footer{
     </div>
     <p class="desc">Programá una mascota que vive en la pantalla de LEDs y siente la temperatura y la luz de verdad. Si tiene calor o está a oscuras, se pone triste: cuidala llevándola a la sombra o dándole luz.</p>
     <div class="tags">
-      <span class="tag">temperatura</span>
-      <span class="tag">nivel de luz</span>
-      <span class="tag">condicionales</span>
+      <span class="tag input">temperatura</span>
+      <span class="tag input">nivel de luz</span>
+      <span class="tag logic">condicionales</span>
     </div>
     <a class="cta" href="https://makecode.microbit.org/" target="_blank" rel="noopener">Abrir MakeCode →</a>
   </div>
@@ -369,9 +441,9 @@ footer{
     </div>
     <p class="desc">Armen una fila de placas que se pasan una señal invisible por radio, sacudiendo cada una en orden como si fuera una carrera de postas. ¿Qué equipo la completa más rápido? Necesitan 4 placas o más.</p>
     <div class="tags">
-      <span class="tag">grupos de radio</span>
-      <span class="tag">sacudir</span>
-      <span class="tag">cronómetro</span>
+      <span class="tag radio">grupos de radio</span>
+      <span class="tag input">sacudir</span>
+      <span class="tag loops">cronómetro</span>
     </div>
     <a class="cta" href="https://makecode.microbit.org/" target="_blank" rel="noopener">Abrir MakeCode →</a>
   </div>
@@ -427,3 +499,4 @@ setInterval(render, 1400);
 
 </body>
 </html>
+
